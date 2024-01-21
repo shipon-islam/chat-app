@@ -1,17 +1,16 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { socket } from "./socket";
+type MessageT = {
+  message: string;
+  user: string;
+};
 const ChatApp = () => {
-  const [messages, setMessages] = useState<
-    {
-      message: string;
-      user: string;
-    }[]
-  >([]);
+  const [messages, setMessages] = useState<MessageT[]>([]);
   const [newMessage, setNewMessage] = useState("");
 
   useEffect(() => {
     socket.on("chat message", (data) => {
-      setMessages((prevMessages) => [...prevMessages, data]);
+      setMessages((prevMessages: MessageT[]) => [...prevMessages, data]);
     });
     socket.on("load messages", (data) => {
       setMessages(data);
@@ -43,7 +42,9 @@ const ChatApp = () => {
         <input
           type="text"
           value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setNewMessage(e.target.value)
+          }
         />
         <button onClick={handleSendMessage}>Send</button>
       </div>

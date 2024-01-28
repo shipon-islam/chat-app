@@ -1,13 +1,25 @@
-import { useRef, useState } from "react";
+import { socket } from "@/lib/socket";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 type InputBarType = {
   handleClick: (value: string) => void;
+  selectedUser: string;
 };
-export default function InputBar({ handleClick }: InputBarType) {
+export default function InputBar({ handleClick, selectedUser }: InputBarType) {
   // const [attachment, setAttachment] = useState<FileList | null>();
   const fileRef = useRef<HTMLInputElement>(null);
   const [newMessage, setNewMessage] = useState("");
+  const handleMessage = (e: ChangeEvent<HTMLInputElement>) => {
+    setNewMessage(e.target.value);
+    socket.emit("start typing", selectedUser);
+  };
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      socket.emit("stop typing", selectedUser);
+    }, 1000);
+    return () => clearTimeout(delayDebounceFn);
+  }, [newMessage, selectedUser]);
 
   return (
     <div className="absolute bottom-0 right-0 bg-background w-full">
@@ -41,7 +53,7 @@ export default function InputBar({ handleClick }: InputBarType) {
           type="text"
           value={newMessage}
           placeholder="message..."
-          onChange={(e) => setNewMessage(e.target.value)}
+          onChange={handleMessage}
         />
         <Button
           onClick={() => {

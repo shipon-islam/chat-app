@@ -92,6 +92,20 @@ io.on("connection", async (socket) => {
     });
   });
 
+  socket.on("start typing", (selectedUser) => {
+    const user = findUser(selectedUser);
+    io.to(user?.socketId).emit("typing", {
+      userId: selectedUser,
+      isTyping: true,
+    });
+  });
+  socket.on("stop typing", (selectedUser) => {
+    const user = findUser(selectedUser);
+    io.to(user?.socketId).emit("typing", {
+      userId: selectedUser,
+      isTyping: false,
+    });
+  });
   socket.on("disconnect", async () => {
     console.log("User disconnected");
     const user = findBySocket(socket.id);

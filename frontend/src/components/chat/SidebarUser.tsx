@@ -1,28 +1,26 @@
-import {
-  createConversation,
-  getConversation,
-  getSession,
-} from "@/actions/userAction";
+import { createConversation, getConversation } from "@/actions/userAction";
+import { UseCustomeContext } from "@/context/ContextProvider";
 import { Axios } from "@/lib/Axios";
-import { conversationType, dbUserType, selectHander } from "@/types/user";
+import { conversationType, selectHanderType } from "@/types/conversation";
+import { dbUserType } from "@/types/user";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from "react";
 import { useQuery } from "react-query";
 import { Input } from "../ui/input";
 import ChatUser from "./ChatUser";
 type SidebarTypes = {
-  handleConversation: (value: selectHander) => void;
+  handleConversation: (value: selectHanderType) => void;
 };
 export default function SidebarUser({ handleConversation }: SidebarTypes) {
-  const [session] = useState(getSession());
+  const { user } = UseCustomeContext();
   const ulContainerRef = useRef<HTMLUListElement>(null);
   const [searchValue, setSearchValue] = useState("");
-  const [searchResults, setSearchResults] = useState<dbUserType[]>([]);
+  const [searchUsers, setSearchUsers] = useState<dbUserType[]>([]);
   const { data: conversations } = useQuery("conversation", getConversation);
-  const fetchData = async (searchTerm: string) => {
+  const fetchData = async (searchQuery: string) => {
     try {
-      const { data } = await Axios(`/api/user?q=${searchTerm}`);
-      setSearchResults(data.data);
+      const { data } = await Axios(`/api/user?q=${searchQuery}`);
+      setSearchUsers(data.data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -57,12 +55,12 @@ export default function SidebarUser({ handleConversation }: SidebarTypes) {
       <h1 className="capitalize text-sm pt-5 pb-2 pl-2 border-b border-gray-700">
         active
       </h1>
-      {searchResults.length <= 0 ? (
+      {searchUsers.length <= 0 ? (
         <ul className="mt-5" ref={ulContainerRef}>
           {conversations?.data?.map((conversation: conversationType) => {
             const { _id, members } = conversation;
             const receiver = members.find(
-              (member: dbUserType) => member._id !== session.id
+              (member: dbUserType) => member._id !== user._id
             );
 
             return (
@@ -81,10 +79,12 @@ export default function SidebarUser({ handleConversation }: SidebarTypes) {
                 <div className="flex  gap-x-2 items-center relative">
                   <Avatar>
                     <AvatarImage
-                      src={receiver?.avatar.url}
+                      src={receiver?.avatar?.url}
                       className="w-7 h-7 object-cover rounded-full border border-white "
                     />
-                    <AvatarFallback>CN</AvatarFallback>
+                    <AvatarFallback className="uppercase">
+                      {receiver?.username.slice(0, 2)}
+                    </AvatarFallback>
                   </Avatar>
                   <span
                     className={`w-2 h-2 ${
@@ -101,11 +101,11 @@ export default function SidebarUser({ handleConversation }: SidebarTypes) {
         </ul>
       ) : (
         <ul className="mt-5">
-          {searchResults.map((userData) => (
+          {searchUsers.map((user) => (
             <ChatUser
               handleUserId={createConversation}
-              key={userData._id}
-              userData={userData}
+              key={user._id}
+              user={user}
             />
           ))}
         </ul>

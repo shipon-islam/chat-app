@@ -1,32 +1,34 @@
-import { getSession } from "@/actions/userAction";
 import InputBar from "@/components/chat/InputBar";
 import SidebarUser from "@/components/chat/SidebarUser";
+import { UseCustomeContext } from "@/context/ContextProvider";
 import { Axios } from "@/lib/Axios";
 import { socket } from "@/lib/socket";
-import { messageType, selectHander, selectedChatType } from "@/types/user";
+import { selectHanderType, selectedChatType } from "@/types/conversation";
+import { messageType } from "@/types/message";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { useEffect, useRef, useState } from "react";
 
 export default function Chat() {
   const [messages, setMessages] = useState<messageType[]>([]);
-  const [isScroll, setIsScroll] = useState(false);
+  const [typing, setTyping] = useState<{
+    userId: string;
+    isTyping: boolean;
+  }>();
   const [selectedChat, setSelectedChat] = useState<selectedChatType>();
   const chatContainerRef = useRef<HTMLUListElement>(null);
-  const session = getSession();
+  const { user } = UseCustomeContext();
   const handleClick = (value: string) => {
-    if (selectedChat && session) {
+    if (selectedChat) {
       socket.emit("send message", {
         ...selectedChat,
         message: value,
-        senderId: session.id,
+        senderId: user._id,
       });
     }
   };
-  const handleConversation = async (value: selectHander) => {
+  const handleConversation = async (value: selectHanderType) => {
     const { data } = await Axios.get(`/api/message/${value.conversationId}`);
-    const { data: currentUser } = await Axios.get(`/api/user/${session.id}`);
-    const avatar = currentUser?.data?.avatar?.url;
-
+    const avatar = user?.avatar?.url;
     setSelectedChat({ ...value, avatar });
     if (data.success) {
       setMessages(data.data);
@@ -39,16 +41,17 @@ export default function Chat() {
   }, []);
 
   useEffect(() => {
-    socket.emit("add user", session?.id);
+    socket.emit("add user", user?._id);
     socket.on("get users", (users) => console.log(users));
-  }, [session]);
+  }, [user]);
+  useEffect(() => {
+    socket.on("typing", (typing) => {
+      setTyping(typing);
+    });
+  }, []);
 
   useEffect(() => {
-    if (
-      chatContainerRef.current &&
-      chatContainerRef.current?.clientHeight >= 400
-    ) {
-      setIsScroll(true);
+    if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop =
         chatContainerRef.current.scrollHeight;
     }
@@ -66,9 +69,7 @@ export default function Chat() {
               </p>
             </div>
             <ul
-              className={`absolute bottom-12 w-full left-0 px-4 ${
-                isScroll ? "overflow-y-scroll" : " "
-              }  max-h-full pt-10`}
+              className={`absolute bottom-12 w-full left-0 px-4 overflow-y-auto max-h-full pt-10`}
               ref={chatContainerRef}
             >
               {messages.map((messageList) => {
@@ -77,9 +78,7 @@ export default function Chat() {
                   <li
                     key={_id}
                     className={`flex  ${
-                      sender?._id === session.id
-                        ? "justify-end"
-                        : "justify-start"
+                      sender?._id === user._id ? "justify-end" : "justify-start"
                     } gap-x-1 new-message my-2 `}
                   >
                     <Avatar>
@@ -87,7 +86,9 @@ export default function Chat() {
                         src={sender?.avatar?.url}
                         className="w-6 h-6 object-cover rounded-full border border-white "
                       />
-                      <AvatarFallback>CN</AvatarFallback>
+                      <AvatarFallback>
+                        {sender?.username?.slice(0, 2)}
+                      </AvatarFallback>
                     </Avatar>
                     <div
                       style={{ borderRadius: `0 1rem 1rem 1rem` }}
@@ -98,8 +99,31 @@ export default function Chat() {
                   </li>
                 );
               })}
+              <li>
+                {typing?.isTyping
+                  ? typing.isTyping && (
+                      <div className="flex items-center height-[17px] pb-4">
+                        <div
+                          style={{ animationDelay: "200ms" }}
+                          className=" bg-gray-500 inline-block h-1.5 w-1.5 mr-2 rounded-sm animate-typing-dot"
+                        ></div>
+                        <div
+                          style={{ animationDelay: "300ms" }}
+                          className=" bg-gray-500 inline-block h-1.5 w-1.5 mr-2 rounded-sm animate-typing-dot"
+                        ></div>
+                        <div
+                          style={{ animationDelay: "400ms" }}
+                          className=" bg-gray-500 inline-block h-1.5 w-1.5 mr-2 rounded-sm animate-typing-dot"
+                        ></div>
+                      </div>
+                    )
+                  : ""}
+              </li>
             </ul>
-            <InputBar handleClick={handleClick} />
+            <InputBar
+              handleClick={handleClick}
+              selectedUser={selectedChat?.receiverId}
+            />
           </div>
         ) : (
           <div className="h-full basis-full relative">

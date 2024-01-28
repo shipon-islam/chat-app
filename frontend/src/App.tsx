@@ -1,10 +1,10 @@
 import RouteControler from "./Routes/RouteControler";
 import Footer from "./components/Footer";
 import Headers from "./components/Headers";
-import { UseTheme } from "./context/ContextProvider";
+import { UseCustomeContext } from "./context/ContextProvider";
 
 export default function App() {
-  const { theme } = UseTheme();
+  const { theme } = UseCustomeContext();
   return (
     <div className={`${theme} bg-background text-foreground`}>
       <Headers />

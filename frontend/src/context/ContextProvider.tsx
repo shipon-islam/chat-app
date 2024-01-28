@@ -1,4 +1,5 @@
-import { getTheme } from "@/actions/userAction";
+import { getUserById } from "@/actions/userAction";
+import { getSession, getTheme } from "@/lib/helpers";
 import {
   ReactNode,
   createContext,
@@ -6,38 +7,34 @@ import {
   useEffect,
   useState,
 } from "react";
-type ThemeType = "dark" | "light";
-type ThemeProviderType = {
-  theme: ThemeType;
-  themeHandler: (themetype: ThemeType) => void;
-  setSelectUser: (id: string) => void;
-  selectedUser: string;
-};
-const contextValue: ThemeProviderType = {
-  theme: "light",
-  themeHandler: () => null,
-  setSelectUser: () => null,
-  selectedUser: "",
-};
-const ThemeContext = createContext<ThemeProviderType>(contextValue);
-export const UseTheme = () => useContext(ThemeContext);
+import { useQuery } from "react-query";
+import { ThemeType, contextValue, contextValueType } from "./initalState";
+const session = getSession();
+const ThemeContext = createContext<contextValueType>(contextValue);
+
+export const UseCustomeContext = () => useContext(ThemeContext);
 
 export default function ContextProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<ThemeType>(getTheme());
-  const [selectedUser, setSelectedUser] = useState("");
-  const themeHandler = (themetype: string) => {
+  const { data } = useQuery(["user", session?.id], () =>
+    getUserById(session?.id)
+  );
+
+  const themeHandler = (themetype: ThemeType) => {
     setTheme(themetype === "light" ? "dark" : "light");
-  };
-  const setSelectUser = (id: string) => {
-    setSelectedUser(id);
   };
   useEffect(() => {
     localStorage.setItem("theme", JSON.stringify(theme));
   }, [theme]);
+
+  const contextValue = {
+    theme,
+    themeHandler,
+    user: data?.data,
+  };
+
   return (
-    <ThemeContext.Provider
-      value={{ theme, themeHandler, selectedUser, setSelectUser }}
-    >
+    <ThemeContext.Provider value={contextValue}>
       {children}
     </ThemeContext.Provider>
   );

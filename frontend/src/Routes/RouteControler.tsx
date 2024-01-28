@@ -1,5 +1,5 @@
-import { getSession } from "@/actions/userAction";
 import { isTokenExpired } from "@/lib/JwtExpired";
+import { getSession } from "@/lib/helpers";
 import Chat from "@/pages/Chat";
 import Home from "@/pages/Home";
 import Login from "@/pages/Login";

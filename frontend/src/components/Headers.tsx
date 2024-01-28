@@ -5,12 +5,10 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Switch } from "@/components/ui/switch";
-
-import { getSession, getUserById } from "@/actions/userAction";
-import { UseTheme } from "@/context/ContextProvider";
+import { UseCustomeContext } from "@/context/ContextProvider";
+import { getSession } from "@/lib/helpers";
 import { SessionType } from "@/types/user";
 import { useState } from "react";
-import { useQuery } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
 
@@ -38,11 +36,10 @@ const navbar_links = [
 ];
 export default function Headers() {
   const [session] = useState<SessionType>(getSession());
-  const { theme, themeHandler } = UseTheme();
+  const { theme, themeHandler, user } = UseCustomeContext();
   const navigate = useNavigate();
-  const { data: user } = useQuery(["user", session?.id], () =>
-    getUserById(session?.id)
-  );
+
+  //for logout controler
   const handleLogout = () => {
     window.localStorage.removeItem("session");
     navigate("/login");
@@ -80,8 +77,10 @@ export default function Headers() {
               <Popover>
                 <PopoverTrigger>
                   <Avatar>
-                    <AvatarImage src={user?.data?.avatar?.url} />
-                    <AvatarFallback>CN</AvatarFallback>
+                    <AvatarImage src={user?.avatar?.url} />
+                    <AvatarFallback className="uppercase">
+                      {user?.username.slice(0, 2)}
+                    </AvatarFallback>
                   </Avatar>
                 </PopoverTrigger>
                 <PopoverContent>

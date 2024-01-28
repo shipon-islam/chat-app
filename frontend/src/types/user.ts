@@ -21,27 +21,8 @@ export interface dbUserType {
   username: string;
   _id: string;
 }
-export type messageType = {
-  _id: string;
-  receiver: dbUserType;
-  message: string;
-  sender: dbUserType;
-  conversation: string;
-};
 
 export interface Avatar {
   url: string;
   public_id: string;
-}
-export type conversationType = {
-  _id: string;
-  members: dbUserType[];
-};
-export interface selectHander {
-  conversationId: string;
-  receiverId: string;
-  receiverName: string;
-}
-export interface selectedChatType extends selectHander {
-  avatar: string;
 }

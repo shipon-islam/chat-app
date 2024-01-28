@@ -1,17 +1,18 @@
 import { socket } from "@/lib/socket";
+import { sendMessageType } from "@/types/message";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 type InputBarType = {
-  handleClick: (value: string) => void;
+  handleClick: (value: sendMessageType) => void;
   selectedUser: string;
 };
 export default function InputBar({ handleClick, selectedUser }: InputBarType) {
-  // const [attachment, setAttachment] = useState<FileList | null>();
+  const [attachment, setAttachment] = useState<FileList | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
-  const [newMessage, setNewMessage] = useState("");
+  const [text, setText] = useState("");
   const handleMessage = (e: ChangeEvent<HTMLInputElement>) => {
-    setNewMessage(e.target.value);
+    setText(e.target.value);
     socket.emit("start typing", selectedUser);
   };
   useEffect(() => {
@@ -19,7 +20,7 @@ export default function InputBar({ handleClick, selectedUser }: InputBarType) {
       socket.emit("stop typing", selectedUser);
     }, 1000);
     return () => clearTimeout(delayDebounceFn);
-  }, [newMessage, selectedUser]);
+  }, [text, selectedUser]);
 
   return (
     <div className="absolute bottom-0 right-0 bg-background w-full">
@@ -44,21 +45,28 @@ export default function InputBar({ handleClick, selectedUser }: InputBarType) {
           ref={fileRef}
           type="file"
           hidden
-          // onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
-          //   setAttachment(target.files)
-          // }
+          onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
+            setAttachment(target.files)
+          }
         />
         <Input
-          className="rounded-none  border-0 focus-visible:ring-0"
+          className="rounded-none border-0 focus-visible:ring-offset-0 focus-visible:ring-0"
           type="text"
-          value={newMessage}
+          value={text}
           placeholder="message..."
           onChange={handleMessage}
         />
         <Button
           onClick={() => {
-            handleClick(newMessage);
-            setNewMessage(" ");
+            handleClick({
+              attachment,
+              text,
+            });
+            setText("");
+            if (fileRef.current) {
+              fileRef.current.value = "";
+              setAttachment(null);
+            }
           }}
           className="rounded-none "
         >

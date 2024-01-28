@@ -5,6 +5,7 @@ const { Server } = require("socket.io");
 const path = require("path");
 const cors = require("cors");
 require("dotenv").config();
+const fs = require("fs");
 //external import
 const userRoute = require("./routes/userRoute");
 const messageRoute = require("./routes/messageRoute");
@@ -14,6 +15,7 @@ const { dbConnect } = require("./db");
 const { errorHandler, notFoundHandler } = require("./middleware/errorHandler");
 const messageModel = require("./models/messageModel");
 const userModel = require("./models/userModel");
+const { cloudUploadStream } = require("./lib/cloudnary");
 
 //for cors policy
 app.use(cors());
@@ -78,18 +80,44 @@ io.on("connection", async (socket) => {
   });
 
   socket.on("send message", async (data) => {
-    const { conversationId, senderId, receiverId, avatar, message } = data;
+    const {
+      conversationId,
+      senderId,
+      receiverId,
+      avatar,
+      message,
+      attachment,
+    } = data;
+
     io.emit("load message", {
       _id: new Date().getTime().toString(),
       sender: { _id: senderId, avatar: { url: avatar } },
       message,
       conversation: conversationId,
+      image: attachment ? attachment?.toString("base64") : "",
     });
-    const messages = await messageModel.create({
-      sender: senderId,
-      message,
-      conversation: conversationId,
-    });
+    try {
+      let messageObj;
+      if (attachment) {
+        const cloudImage = await cloudUploadStream("avatar", attachment);
+        messageObj = {
+          sender: senderId,
+          message,
+          image: cloudImage.url,
+          conversation: conversationId,
+        };
+      } else {
+        messageObj = {
+          sender: senderId,
+          message,
+          conversation: conversationId,
+        };
+      }
+      await messageModel.create(messageObj);
+    } catch (error) {
+      console.log(error);
+      throw new Error(error);
+    }
   });
 
   socket.on("start typing", (selectedUser) => {

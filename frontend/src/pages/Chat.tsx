@@ -4,12 +4,12 @@ import { UseCustomeContext } from "@/context/ContextProvider";
 import { Axios } from "@/lib/Axios";
 import { socket } from "@/lib/socket";
 import { selectHanderType, selectedChatType } from "@/types/conversation";
-import { messageType } from "@/types/message";
+import { sendMessageType, socMessageType } from "@/types/message";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { useEffect, useRef, useState } from "react";
 
 export default function Chat() {
-  const [messages, setMessages] = useState<messageType[]>([]);
+  const [messages, setMessages] = useState<socMessageType[]>([]);
   const [typing, setTyping] = useState<{
     userId: string;
     isTyping: boolean;
@@ -17,13 +17,28 @@ export default function Chat() {
   const [selectedChat, setSelectedChat] = useState<selectedChatType>();
   const chatContainerRef = useRef<HTMLUListElement>(null);
   const { user } = UseCustomeContext();
-  const handleClick = (value: string) => {
+  const handleClick = (value: sendMessageType) => {
     if (selectedChat) {
-      socket.emit("send message", {
-        ...selectedChat,
-        message: value,
-        senderId: user._id,
-      });
+      if (value.attachment) {
+        const file = value.attachment[0];
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+          socket.emit("send message", {
+            ...selectedChat,
+            message: value?.text,
+            attachment: reader.result,
+            senderId: user._id,
+          });
+        };
+      } else {
+        if (!value.text) return;
+        socket.emit("send message", {
+          ...selectedChat,
+          message: value?.text,
+          senderId: user._id,
+        });
+      }
     }
   };
   const handleConversation = async (value: selectHanderType) => {
@@ -32,6 +47,7 @@ export default function Chat() {
     setSelectedChat({ ...value, avatar });
     if (data.success) {
       setMessages(data.data);
+      0;
     }
   };
   useEffect(() => {
@@ -58,8 +74,8 @@ export default function Chat() {
   }, [messages]);
 
   return (
-    <div className="min-h-screen">
-      <div className="w-[35rem] h-[30rem] bg-secondary mx-auto mt-8 rounded-md border border-gray-700 flex overflow-hidden">
+    <div className="sm:min-h-screen">
+      <div className="sm:w-[35rem] h-[30rem] bg-secondary mx-auto mt-8  mb-8 sm:mb-0 rounded-md border border-gray-700 flex overflow-hidden">
         <SidebarUser handleConversation={handleConversation} />
         {selectedChat ? (
           <div className="basis-full relative pb-4 pr-4 overflow-hidden">
@@ -73,7 +89,7 @@ export default function Chat() {
               ref={chatContainerRef}
             >
               {messages.map((messageList) => {
-                const { sender, message, _id } = messageList;
+                const { sender, message, _id, image } = messageList;
                 return (
                   <li
                     key={_id}
@@ -94,6 +110,9 @@ export default function Chat() {
                       style={{ borderRadius: `0 1rem 1rem 1rem` }}
                       className="bg-slate-900 px-3 py-2 text-sm"
                     >
+                      {image && (
+                        <img className="max-w-24" src={image} alt="dsfds" />
+                      )}
                       <p>{message}</p>
                     </div>
                   </li>
@@ -105,15 +124,15 @@ export default function Chat() {
                       <div className="flex items-center height-[17px] pb-4">
                         <div
                           style={{ animationDelay: "200ms" }}
-                          className=" bg-gray-500 inline-block h-1.5 w-1.5 mr-2 rounded-sm animate-typing-dot"
+                          className=" bg-gray-500 inline-block h-1.5 w-1.5 mr-1.5 rounded-sm animate-typing-dot"
                         ></div>
                         <div
                           style={{ animationDelay: "300ms" }}
-                          className=" bg-gray-500 inline-block h-1.5 w-1.5 mr-2 rounded-sm animate-typing-dot"
+                          className=" bg-gray-500 inline-block h-1.5 w-1.5 mr-1.5 rounded-sm animate-typing-dot"
                         ></div>
                         <div
                           style={{ animationDelay: "400ms" }}
-                          className=" bg-gray-500 inline-block h-1.5 w-1.5 mr-2 rounded-sm animate-typing-dot"
+                          className=" bg-gray-500 inline-block h-1.5 w-1.5 mr-1.5 rounded-sm animate-typing-dot"
                         ></div>
                       </div>
                     )

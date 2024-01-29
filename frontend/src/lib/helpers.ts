@@ -18,6 +18,6 @@ export const getSession = () => {
 
 export const getTheme = () => {
   const localTheme = localStorage.getItem("theme");
-  const theme = localTheme ? JSON.parse(localTheme) : "light";
+  const theme = localTheme ? JSON.parse(localTheme) : "dark";
   return theme;
 };

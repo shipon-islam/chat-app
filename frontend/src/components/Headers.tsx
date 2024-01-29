@@ -25,13 +25,13 @@ const navbar_links = [
   },
   {
     id: 3,
-    name: "About",
-    endpoint: "/",
+    name: "Support",
+    endpoint: "/support",
   },
   {
     id: 4,
-    name: "Contact",
-    endpoint: "/contact",
+    name: "Terms",
+    endpoint: "/terms",
   },
 ];
 export default function Headers() {
@@ -42,7 +42,6 @@ export default function Headers() {
   const btnRef = useRef<HTMLButtonElement>(null);
 
   const handleBtn = () => {
-    console.log("dsfd");
     btnRef.current?.classList.toggle("active");
     setIsShow((prev) => !prev);
   };
@@ -79,6 +78,17 @@ export default function Headers() {
             isShow ? "scale-1" : "scale-0 "
           } md:hidden absolute bg-secondary w-full left-0 top-16 px-9 space-y-10 font-bold  pt-10 pb-14 transition-transform duration-500  origin-top-right z-50`}
         >
+          {session?.token && (
+            <li className=" flex items-center gap-x-2 bg-gray-700/20 py-2 px-2 rounded">
+              <Avatar className="h-9 w-9 border border-gray-900 dark:border-gray-400">
+                <AvatarImage src={user?.avatar?.url} />
+                <AvatarFallback className="uppercase">
+                  {user?.username.slice(0, 2)}
+                </AvatarFallback>
+              </Avatar>
+              <span className="capitalize font-medium">{user?.username}</span>
+            </li>
+          )}
           {navbar_links.map((link) => (
             <li key={link.id} onClick={handleBtn}>
               <Link
@@ -96,7 +106,7 @@ export default function Headers() {
               </Button>
             </li>
           ) : (
-            <li>
+            <li onClick={handleBtn}>
               <Link to="/login">
                 <Button size="lg" className="font-bold">
                   Login

@@ -6,7 +6,7 @@ export type contextValueType = {
   user: dbUserType;
 };
 export const contextValue: contextValueType = {
-  theme: "light",
+  theme: "dark",
   themeHandler: () => null,
   user: {
     avatar: { url: "", public_id: "" },

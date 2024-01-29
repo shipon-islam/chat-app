@@ -13,11 +13,11 @@ type SidebarTypes = {
   handleConversation: (value: selectHanderType) => void;
 };
 export default function SidebarUser({ handleConversation }: SidebarTypes) {
-  const { user } = UseCustomeContext();
   const ulContainerRef = useRef<HTMLUListElement>(null);
   const [searchValue, setSearchValue] = useState("");
   const [searchUsers, setSearchUsers] = useState<dbUserType[]>([]);
   const { data: conversations } = useQuery("conversation", getConversation);
+  const { user } = UseCustomeContext();
   const fetchData = async (searchQuery: string) => {
     try {
       const { data } = await Axios(`/api/user?q=${searchQuery}`);
@@ -56,7 +56,7 @@ export default function SidebarUser({ handleConversation }: SidebarTypes) {
       <h1 className="capitalize text-sm pt-5 pb-2 pl-2 border-b border-gray-700 mx-2">
         active
       </h1>
-      <ScrollArea className="h-[22rem]">
+      <ScrollArea className="h-[21.2rem]">
         {searchUsers.length <= 0 ? (
           <ul className="mt-5 px-2" ref={ulContainerRef}>
             {conversations?.data?.map(
@@ -120,6 +120,23 @@ export default function SidebarUser({ handleConversation }: SidebarTypes) {
           </ul>
         )}
       </ScrollArea>
+      <div className="bg-gray-700/20 flex items-center gap-x-2 py-2 px-2 border-t border-gray-500">
+        <Avatar>
+          <AvatarImage
+            src={user?.avatar?.url}
+            className="w-6 h-6 object-cover rounded-full border border-white "
+          />
+          <AvatarFallback className="uppercase">
+            {user?.username.slice(0, 2)}
+          </AvatarFallback>
+        </Avatar>
+        <span className="capitalize hidden sm:block text-sm font-medium">
+          {user?.username}
+        </span>
+        <span className="capitalize sm:hidden text-sm font-medium">
+          {user?.username.split(" ")[0]}
+        </span>
+      </div>
     </div>
   );
 }

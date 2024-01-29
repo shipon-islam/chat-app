@@ -86,7 +86,7 @@ export default function Chat() {
             </div>
 
             <ul
-              className={`absolute bottom-12 w-full left-0 px-4 h-[30rem] pt-10 overflow-y-auto`}
+              className={`absolute bottom-12 w-full left-0 px-4 h-[30rem] pt-24 overflow-y-auto`}
               ref={chatContainerRef}
             >
               {messages.map((messageList) => {

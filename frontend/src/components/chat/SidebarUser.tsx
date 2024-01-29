@@ -57,7 +57,7 @@ export default function SidebarUser({ handleConversation }: SidebarTypes) {
       </h1>
       {searchUsers.length <= 0 ? (
         <ul
-          className="mt-5 overflow-y-scroll h-[21rem] px-2"
+          className="mt-5 overflow-y-auto h-[21rem] px-2"
           ref={ulContainerRef}
         >
           {conversations?.data?.map(

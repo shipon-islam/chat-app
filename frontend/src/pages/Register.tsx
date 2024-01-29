@@ -145,13 +145,13 @@ export default function Register() {
               <FormLabel>
                 Profile picture <span>(optional)</span>
               </FormLabel>
-              <FormControl>
+              <FormControl className="text-white">
                 <Input
+                  className="file:dark:text-white text-gray-700"
                   type="file"
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     form.setValue("avatar", e.target.files)
                   }
-                  placeholder="Enter confirm password"
                 />
               </FormControl>
               <FormMessage />

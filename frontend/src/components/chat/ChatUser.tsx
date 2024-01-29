@@ -26,7 +26,8 @@ export default function ChatUser({
             user.status === "ofline" ? "bg-red-600" : "bg-green-600"
           }  rounded-full absolute border border-gray-400 -top-0 left-6`}
         ></span>
-        <h5 className="text-sm">{user?.username}</h5>
+        <h5 className="text-sm hidden sm:block">{user?.username}</h5>
+        <h5 className="text-sm sm:hidden">{user?.username.split(" ")[0]}</h5>
       </div>
     </li>
   );

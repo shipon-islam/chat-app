@@ -79,7 +79,7 @@ export default function Chat() {
         <SidebarUser handleConversation={handleConversation} />
         {selectedChat ? (
           <div className="basis-full relative pb-4 pr-4 overflow-hidden">
-            <div className=" bg-slate-900 absolute top-0 w-full z-10 py-2">
+            <div className=" bg-gray-200 border dark:bg-slate-900 absolute top-0 w-full z-10 py-2">
               <p className="pl-4 capitalize text-sm">
                 {selectedChat?.receiverName}
               </p>
@@ -108,10 +108,14 @@ export default function Chat() {
                     </Avatar>
                     <div
                       style={{ borderRadius: `0 1rem 1rem 1rem` }}
-                      className="bg-slate-900 px-3 py-2 text-sm"
+                      className="dark:bg-slate-900 bg-slate-900/30 px-3 py-2 text-sm"
                     >
                       {image && (
-                        <img className="max-w-24" src={image} alt="dsfds" />
+                        <img
+                          className="max-w-20 sm:max-w-24 "
+                          src={image}
+                          alt="dsfds"
+                        />
                       )}
                       <p>{message}</p>
                     </div>

@@ -43,7 +43,7 @@ export default function Login() {
     <div className="bg-black/80  min-h-screen pt-10">
       <div className="max-w-[450px] border-2 p-6 rounded-md mx-auto w-[90%]  bg-background">
         <h1 className="capitalize font-bold text-xl mt-4 mb-6">
-          login your with creadentials
+          login with creadentials
         </h1>
         {errorArea && (
           <p className="py-2 text-center bg-violet-600/20 my-4 font-medium rounded-lg text-red-600 capitalize">

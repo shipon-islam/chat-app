@@ -42,7 +42,7 @@ export default function SidebarUser({ handleConversation }: SidebarTypes) {
     return () => clearTimeout(delayDebounceFn);
   }, [searchValue]);
   return (
-    <div className=" max-w-[12rem] border-r border-gray-700 h-full py-2 px-3">
+    <div className="max-w-[10rem] sm:max-w-[12rem] border-r border-gray-700 h-full py-2 px-3">
       <div className="flex w-full max-w-sm items-center space-x-2 ">
         <Input
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -93,7 +93,12 @@ export default function SidebarUser({ handleConversation }: SidebarTypes) {
                         : "bg-green-600"
                     }  rounded-full absolute border border-gray-400 -top-0 left-6`}
                   ></span>
-                  <h5 className="text-sm">{receiver?.username}</h5>
+                  <h5 className="text-sm hidden sm:block">
+                    {receiver?.username}
+                  </h5>
+                  <h5 className="text-sm sm:hidden">
+                    {receiver?.username.split(" ")[0]}
+                  </h5>
                 </div>
               </li>
             );

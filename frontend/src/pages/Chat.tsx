@@ -74,7 +74,7 @@ export default function Chat() {
   }, [messages]);
 
   return (
-    <div className="sm:min-h-screen">
+    <div className="min-h-[75vh] sm:min-h-screen">
       <div className="sm:w-[35rem] h-[30rem] bg-secondary mx-1 sm:mx-auto mt-8  mb-8 sm:mb-0 rounded-md border border-gray-700 flex overflow-hidden ">
         <SidebarUser handleConversation={handleConversation} />
         {selectedChat ? (

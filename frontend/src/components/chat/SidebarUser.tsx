@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from "react";
 import { useQuery } from "react-query";
 import { Input } from "../ui/input";
+import { ScrollArea } from "../ui/scroll-area";
 import ChatUser from "./ChatUser";
 type SidebarTypes = {
   handleConversation: (value: selectHanderType) => void;
@@ -55,258 +56,257 @@ export default function SidebarUser({ handleConversation }: SidebarTypes) {
       <h1 className="capitalize text-sm pt-5 pb-2 pl-2 border-b border-gray-700 mx-2">
         active
       </h1>
-      {searchUsers.length <= 0 ? (
-        <ul
-          className="mt-5 overflow-y-auto h-[21rem] px-2"
-          ref={ulContainerRef}
-        >
-          {conversations?.data?.map(
-            (conversation: conversationType, index: number) => {
-              const { _id, members } = conversation;
-              const receiver = members.find(
-                (member: dbUserType) => member._id !== user._id
-              );
+      <ScrollArea className="h-[22rem]">
+        {searchUsers.length <= 0 ? (
+          <ul className="mt-5 px-2" ref={ulContainerRef}>
+            {conversations?.data?.map(
+              (conversation: conversationType, index: number) => {
+                const { _id, members } = conversation;
+                const receiver = members.find(
+                  (member: dbUserType) => member._id !== user._id
+                );
 
-              return (
-                <>
-                  <li
-                    key={index}
-                    onClick={(e: MouseEvent<HTMLLIElement>) => {
-                      handleSeletor(e);
-                      handleConversation({
-                        conversationId: _id,
-                        receiverId: receiver?._id as string,
-                        receiverName: receiver?.username as string,
-                      });
-                    }}
-                    className={`cursor-pointer hover:bg-slate-900/30 pl-2 py-3 rounded-xl`}
-                  >
-                    <div className="flex  gap-x-2 items-center relative">
-                      <Avatar>
-                        <AvatarImage
-                          src={receiver?.avatar?.url}
-                          className="w-7 h-7 object-cover rounded-full border border-white "
-                        />
-                        <AvatarFallback className="uppercase">
-                          {receiver?.username.slice(0, 2)}
-                        </AvatarFallback>
-                      </Avatar>
-                      <span
-                        className={`w-2 h-2 ${
-                          receiver?.status === "ofline"
-                            ? "bg-red-600"
-                            : "bg-green-600"
-                        }  rounded-full absolute border border-gray-400 -top-0 left-6`}
-                      ></span>
-                      <h5 className="text-sm hidden sm:block">
-                        {receiver?.username}
-                      </h5>
-                      <h5 className="text-sm sm:hidden">
-                        {receiver?.username.split(" ")[0]}
-                      </h5>
-                    </div>
-                  </li>
-                  <li
-                    key={index + 1}
-                    onClick={(e: MouseEvent<HTMLLIElement>) => {
-                      handleSeletor(e);
-                      handleConversation({
-                        conversationId: _id,
-                        receiverId: receiver?._id as string,
-                        receiverName: receiver?.username as string,
-                      });
-                    }}
-                    className={`cursor-pointer hover:bg-slate-900/30 pl-2 py-3 rounded-xl`}
-                  >
-                    <div className="flex  gap-x-2 items-center relative">
-                      <Avatar>
-                        <AvatarImage
-                          src={receiver?.avatar?.url}
-                          className="w-7 h-7 object-cover rounded-full border border-white "
-                        />
-                        <AvatarFallback className="uppercase">
-                          {receiver?.username.slice(0, 2)}
-                        </AvatarFallback>
-                      </Avatar>
-                      <span
-                        className={`w-2 h-2 ${
-                          receiver?.status === "ofline"
-                            ? "bg-red-600"
-                            : "bg-green-600"
-                        }  rounded-full absolute border border-gray-400 -top-0 left-6`}
-                      ></span>
-                      <h5 className="text-sm hidden sm:block">
-                        {receiver?.username}
-                      </h5>
-                      <h5 className="text-sm sm:hidden">
-                        {receiver?.username.split(" ")[0]}
-                      </h5>
-                    </div>
-                  </li>
-                  <li
-                    key={index + 2}
-                    onClick={(e: MouseEvent<HTMLLIElement>) => {
-                      handleSeletor(e);
-                      handleConversation({
-                        conversationId: _id,
-                        receiverId: receiver?._id as string,
-                        receiverName: receiver?.username as string,
-                      });
-                    }}
-                    className={`cursor-pointer hover:bg-slate-900/30 pl-2 py-3 rounded-xl`}
-                  >
-                    <div className="flex  gap-x-2 items-center relative">
-                      <Avatar>
-                        <AvatarImage
-                          src={receiver?.avatar?.url}
-                          className="w-7 h-7 object-cover rounded-full border border-white "
-                        />
-                        <AvatarFallback className="uppercase">
-                          {receiver?.username.slice(0, 2)}
-                        </AvatarFallback>
-                      </Avatar>
-                      <span
-                        className={`w-2 h-2 ${
-                          receiver?.status === "ofline"
-                            ? "bg-red-600"
-                            : "bg-green-600"
-                        }  rounded-full absolute border border-gray-400 -top-0 left-6`}
-                      ></span>
-                      <h5 className="text-sm hidden sm:block">
-                        {receiver?.username}
-                      </h5>
-                      <h5 className="text-sm sm:hidden">
-                        {receiver?.username.split(" ")[0]}
-                      </h5>
-                    </div>
-                  </li>
-                  <li
-                    key={index + 3}
-                    onClick={(e: MouseEvent<HTMLLIElement>) => {
-                      handleSeletor(e);
-                      handleConversation({
-                        conversationId: _id,
-                        receiverId: receiver?._id as string,
-                        receiverName: receiver?.username as string,
-                      });
-                    }}
-                    className={`cursor-pointer hover:bg-slate-900/30 pl-2 py-3 rounded-xl`}
-                  >
-                    <div className="flex  gap-x-2 items-center relative">
-                      <Avatar>
-                        <AvatarImage
-                          src={receiver?.avatar?.url}
-                          className="w-7 h-7 object-cover rounded-full border border-white "
-                        />
-                        <AvatarFallback className="uppercase">
-                          {receiver?.username.slice(0, 2)}
-                        </AvatarFallback>
-                      </Avatar>
-                      <span
-                        className={`w-2 h-2 ${
-                          receiver?.status === "ofline"
-                            ? "bg-red-600"
-                            : "bg-green-600"
-                        }  rounded-full absolute border border-gray-400 -top-0 left-6`}
-                      ></span>
-                      <h5 className="text-sm hidden sm:block">
-                        {receiver?.username}
-                      </h5>
-                      <h5 className="text-sm sm:hidden">
-                        {receiver?.username.split(" ")[0]}
-                      </h5>
-                    </div>
-                  </li>
-                  <li
-                    key={index + 4}
-                    onClick={(e: MouseEvent<HTMLLIElement>) => {
-                      handleSeletor(e);
-                      handleConversation({
-                        conversationId: _id,
-                        receiverId: receiver?._id as string,
-                        receiverName: receiver?.username as string,
-                      });
-                    }}
-                    className={`cursor-pointer hover:bg-slate-900/30 pl-2 py-3 rounded-xl`}
-                  >
-                    <div className="flex  gap-x-2 items-center relative">
-                      <Avatar>
-                        <AvatarImage
-                          src={receiver?.avatar?.url}
-                          className="w-7 h-7 object-cover rounded-full border border-white "
-                        />
-                        <AvatarFallback className="uppercase">
-                          {receiver?.username.slice(0, 2)}
-                        </AvatarFallback>
-                      </Avatar>
-                      <span
-                        className={`w-2 h-2 ${
-                          receiver?.status === "ofline"
-                            ? "bg-red-600"
-                            : "bg-green-600"
-                        }  rounded-full absolute border border-gray-400 -top-0 left-6`}
-                      ></span>
-                      <h5 className="text-sm hidden sm:block">
-                        {receiver?.username}
-                      </h5>
-                      <h5 className="text-sm sm:hidden">
-                        {receiver?.username.split(" ")[0]}
-                      </h5>
-                    </div>
-                  </li>
-                  <li
-                    key={index + 5}
-                    onClick={(e: MouseEvent<HTMLLIElement>) => {
-                      handleSeletor(e);
-                      handleConversation({
-                        conversationId: _id,
-                        receiverId: receiver?._id as string,
-                        receiverName: receiver?.username as string,
-                      });
-                    }}
-                    className={`cursor-pointer hover:bg-slate-900/30 pl-2 py-3 rounded-xl`}
-                  >
-                    <div className="flex  gap-x-2 items-center relative">
-                      <Avatar>
-                        <AvatarImage
-                          src={receiver?.avatar?.url}
-                          className="w-7 h-7 object-cover rounded-full border border-white "
-                        />
-                        <AvatarFallback className="uppercase">
-                          {receiver?.username.slice(0, 2)}
-                        </AvatarFallback>
-                      </Avatar>
-                      <span
-                        className={`w-2 h-2 ${
-                          receiver?.status === "ofline"
-                            ? "bg-red-600"
-                            : "bg-green-600"
-                        }  rounded-full absolute border border-gray-400 -top-0 left-6`}
-                      ></span>
-                      <h5 className="text-sm hidden sm:block">
-                        {receiver?.username}
-                      </h5>
-                      <h5 className="text-sm sm:hidden">
-                        {receiver?.username.split(" ")[0]}
-                      </h5>
-                    </div>
-                  </li>
-                </>
-              );
-            }
-          )}
-        </ul>
-      ) : (
-        <ul className="mt-5 px-2">
-          {searchUsers.map((user, index) => (
-            <ChatUser
-              handleUserId={createConversation}
-              key={index}
-              user={user}
-            />
-          ))}
-        </ul>
-      )}
+                return (
+                  <>
+                    <li
+                      key={index}
+                      onClick={(e: MouseEvent<HTMLLIElement>) => {
+                        handleSeletor(e);
+                        handleConversation({
+                          conversationId: _id,
+                          receiverId: receiver?._id as string,
+                          receiverName: receiver?.username as string,
+                        });
+                      }}
+                      className={`cursor-pointer hover:bg-slate-900/30 pl-2 py-3 rounded-xl`}
+                    >
+                      <div className="flex  gap-x-2 items-center relative">
+                        <Avatar>
+                          <AvatarImage
+                            src={receiver?.avatar?.url}
+                            className="w-7 h-7 object-cover rounded-full border border-white "
+                          />
+                          <AvatarFallback className="uppercase">
+                            {receiver?.username.slice(0, 2)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <span
+                          className={`w-2 h-2 ${
+                            receiver?.status === "ofline"
+                              ? "bg-red-600"
+                              : "bg-green-600"
+                          }  rounded-full absolute border border-gray-400 -top-0 left-6`}
+                        ></span>
+                        <h5 className="text-sm hidden sm:block">
+                          {receiver?.username}
+                        </h5>
+                        <h5 className="text-sm sm:hidden">
+                          {receiver?.username.split(" ")[0]}
+                        </h5>
+                      </div>
+                    </li>
+                    <li
+                      key={index + 1}
+                      onClick={(e: MouseEvent<HTMLLIElement>) => {
+                        handleSeletor(e);
+                        handleConversation({
+                          conversationId: _id,
+                          receiverId: receiver?._id as string,
+                          receiverName: receiver?.username as string,
+                        });
+                      }}
+                      className={`cursor-pointer hover:bg-slate-900/30 pl-2 py-3 rounded-xl`}
+                    >
+                      <div className="flex  gap-x-2 items-center relative">
+                        <Avatar>
+                          <AvatarImage
+                            src={receiver?.avatar?.url}
+                            className="w-7 h-7 object-cover rounded-full border border-white "
+                          />
+                          <AvatarFallback className="uppercase">
+                            {receiver?.username.slice(0, 2)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <span
+                          className={`w-2 h-2 ${
+                            receiver?.status === "ofline"
+                              ? "bg-red-600"
+                              : "bg-green-600"
+                          }  rounded-full absolute border border-gray-400 -top-0 left-6`}
+                        ></span>
+                        <h5 className="text-sm hidden sm:block">
+                          {receiver?.username}
+                        </h5>
+                        <h5 className="text-sm sm:hidden">
+                          {receiver?.username.split(" ")[0]}
+                        </h5>
+                      </div>
+                    </li>
+                    <li
+                      key={index + 2}
+                      onClick={(e: MouseEvent<HTMLLIElement>) => {
+                        handleSeletor(e);
+                        handleConversation({
+                          conversationId: _id,
+                          receiverId: receiver?._id as string,
+                          receiverName: receiver?.username as string,
+                        });
+                      }}
+                      className={`cursor-pointer hover:bg-slate-900/30 pl-2 py-3 rounded-xl`}
+                    >
+                      <div className="flex  gap-x-2 items-center relative">
+                        <Avatar>
+                          <AvatarImage
+                            src={receiver?.avatar?.url}
+                            className="w-7 h-7 object-cover rounded-full border border-white "
+                          />
+                          <AvatarFallback className="uppercase">
+                            {receiver?.username.slice(0, 2)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <span
+                          className={`w-2 h-2 ${
+                            receiver?.status === "ofline"
+                              ? "bg-red-600"
+                              : "bg-green-600"
+                          }  rounded-full absolute border border-gray-400 -top-0 left-6`}
+                        ></span>
+                        <h5 className="text-sm hidden sm:block">
+                          {receiver?.username}
+                        </h5>
+                        <h5 className="text-sm sm:hidden">
+                          {receiver?.username.split(" ")[0]}
+                        </h5>
+                      </div>
+                    </li>
+                    <li
+                      key={index + 3}
+                      onClick={(e: MouseEvent<HTMLLIElement>) => {
+                        handleSeletor(e);
+                        handleConversation({
+                          conversationId: _id,
+                          receiverId: receiver?._id as string,
+                          receiverName: receiver?.username as string,
+                        });
+                      }}
+                      className={`cursor-pointer hover:bg-slate-900/30 pl-2 py-3 rounded-xl`}
+                    >
+                      <div className="flex  gap-x-2 items-center relative">
+                        <Avatar>
+                          <AvatarImage
+                            src={receiver?.avatar?.url}
+                            className="w-7 h-7 object-cover rounded-full border border-white "
+                          />
+                          <AvatarFallback className="uppercase">
+                            {receiver?.username.slice(0, 2)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <span
+                          className={`w-2 h-2 ${
+                            receiver?.status === "ofline"
+                              ? "bg-red-600"
+                              : "bg-green-600"
+                          }  rounded-full absolute border border-gray-400 -top-0 left-6`}
+                        ></span>
+                        <h5 className="text-sm hidden sm:block">
+                          {receiver?.username}
+                        </h5>
+                        <h5 className="text-sm sm:hidden">
+                          {receiver?.username.split(" ")[0]}
+                        </h5>
+                      </div>
+                    </li>
+                    <li
+                      key={index + 4}
+                      onClick={(e: MouseEvent<HTMLLIElement>) => {
+                        handleSeletor(e);
+                        handleConversation({
+                          conversationId: _id,
+                          receiverId: receiver?._id as string,
+                          receiverName: receiver?.username as string,
+                        });
+                      }}
+                      className={`cursor-pointer hover:bg-slate-900/30 pl-2 py-3 rounded-xl`}
+                    >
+                      <div className="flex  gap-x-2 items-center relative">
+                        <Avatar>
+                          <AvatarImage
+                            src={receiver?.avatar?.url}
+                            className="w-7 h-7 object-cover rounded-full border border-white "
+                          />
+                          <AvatarFallback className="uppercase">
+                            {receiver?.username.slice(0, 2)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <span
+                          className={`w-2 h-2 ${
+                            receiver?.status === "ofline"
+                              ? "bg-red-600"
+                              : "bg-green-600"
+                          }  rounded-full absolute border border-gray-400 -top-0 left-6`}
+                        ></span>
+                        <h5 className="text-sm hidden sm:block">
+                          {receiver?.username}
+                        </h5>
+                        <h5 className="text-sm sm:hidden">
+                          {receiver?.username.split(" ")[0]}
+                        </h5>
+                      </div>
+                    </li>
+                    <li
+                      key={index + 5}
+                      onClick={(e: MouseEvent<HTMLLIElement>) => {
+                        handleSeletor(e);
+                        handleConversation({
+                          conversationId: _id,
+                          receiverId: receiver?._id as string,
+                          receiverName: receiver?.username as string,
+                        });
+                      }}
+                      className={`cursor-pointer hover:bg-slate-900/30 pl-2 py-3 rounded-xl`}
+                    >
+                      <div className="flex  gap-x-2 items-center relative">
+                        <Avatar>
+                          <AvatarImage
+                            src={receiver?.avatar?.url}
+                            className="w-7 h-7 object-cover rounded-full border border-white "
+                          />
+                          <AvatarFallback className="uppercase">
+                            {receiver?.username.slice(0, 2)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <span
+                          className={`w-2 h-2 ${
+                            receiver?.status === "ofline"
+                              ? "bg-red-600"
+                              : "bg-green-600"
+                          }  rounded-full absolute border border-gray-400 -top-0 left-6`}
+                        ></span>
+                        <h5 className="text-sm hidden sm:block">
+                          {receiver?.username}
+                        </h5>
+                        <h5 className="text-sm sm:hidden">
+                          {receiver?.username.split(" ")[0]}
+                        </h5>
+                      </div>
+                    </li>
+                  </>
+                );
+              }
+            )}
+          </ul>
+        ) : (
+          <ul className="mt-5 px-2">
+            {searchUsers.map((user, index) => (
+              <ChatUser
+                handleUserId={createConversation}
+                key={index}
+                user={user}
+              />
+            ))}
+          </ul>
+        )}
+      </ScrollArea>
     </div>
   );
 }

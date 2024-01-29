@@ -84,8 +84,9 @@ export default function Chat() {
                 {selectedChat?.receiverName}
               </p>
             </div>
+
             <ul
-              className={`absolute bottom-12 w-full left-0 px-4 overflow-y-auto max-h-full pt-10`}
+              className={`absolute bottom-12 w-full left-0 px-4 h-[30rem] pt-10 overflow-y-auto`}
               ref={chatContainerRef}
             >
               {messages.map((messageList) => {
@@ -143,6 +144,7 @@ export default function Chat() {
                   : ""}
               </li>
             </ul>
+
             <InputBar
               handleClick={handleClick}
               selectedUser={selectedChat?.receiverId}

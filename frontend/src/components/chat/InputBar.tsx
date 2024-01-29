@@ -23,7 +23,7 @@ export default function InputBar({ handleClick, selectedUser }: InputBarType) {
   }, [text, selectedUser]);
 
   return (
-    <div className="absolute bottom-0 right-0 bg-background w-full">
+    <div className="absolute bottom-0 right-0 bg-background w-full border-t">
       <div className="flex">
         <button onClick={() => fileRef.current?.click()}>
           <svg

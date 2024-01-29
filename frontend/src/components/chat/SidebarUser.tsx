@@ -42,7 +42,7 @@ export default function SidebarUser({ handleConversation }: SidebarTypes) {
     return () => clearTimeout(delayDebounceFn);
   }, [searchValue]);
   return (
-    <div className="max-w-[10rem] sm:max-w-[12rem] border-r border-gray-700 h-full py-2  bg-blue-500 dark:bg-secondary">
+    <div className="max-w-[10rem] sm:max-w-[12rem] border-r border-gray-700 h-full py-2  bg-gray-400 dark:bg-secondary">
       <div className="flex w-full max-w-sm items-center space-x-2 px-2">
         <Input
           onChange={(e: ChangeEvent<HTMLInputElement>) =>

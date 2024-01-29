@@ -75,7 +75,7 @@ export default function Chat() {
 
   return (
     <div className="sm:min-h-screen">
-      <div className="sm:w-[35rem] h-[30rem] bg-secondary mx-auto mt-8  mb-8 sm:mb-0 rounded-md border border-gray-700 flex overflow-hidden">
+      <div className="sm:w-[35rem] h-[30rem] bg-secondary mx-1 sm:mx-auto mt-8  mb-8 sm:mb-0 rounded-md border border-gray-700 flex overflow-hidden ">
         <SidebarUser handleConversation={handleConversation} />
         {selectedChat ? (
           <div className="basis-full relative pb-4 pr-4 overflow-hidden">

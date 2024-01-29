@@ -10,6 +10,7 @@ type InputBarType = {
 export default function InputBar({ handleClick, selectedUser }: InputBarType) {
   const [attachment, setAttachment] = useState<FileList | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+  const messageRef = useRef<HTMLInputElement>(null);
   const [text, setText] = useState("");
   const handleMessage = (e: ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value);
@@ -53,6 +54,7 @@ export default function InputBar({ handleClick, selectedUser }: InputBarType) {
           className="rounded-none border-0 focus-visible:ring-offset-0 focus-visible:ring-0"
           type="text"
           value={text}
+          ref={messageRef}
           placeholder="message..."
           onChange={handleMessage}
         />
@@ -63,6 +65,7 @@ export default function InputBar({ handleClick, selectedUser }: InputBarType) {
               text,
             });
             setText("");
+            messageRef.current?.focus();
             if (fileRef.current) {
               fileRef.current.value = "";
               setAttachment(null);

@@ -13,7 +13,7 @@ const registerUser = async (req, res, next) => {
       next("all fields are required");
     } else {
       if (file) {
-        const { url, public_id } = await cloudUpload(file.path, "avatar");
+        const { url, public_id } = await cloudUpload(file.path, "chat-app/avatar");
         userObject = {
           username,
           email,

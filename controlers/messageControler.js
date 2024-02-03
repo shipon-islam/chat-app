@@ -1,5 +1,4 @@
 const messageModel = require("../models/messageModel");
-const conversationModel = require("../models/conversationModel");
 const createMessage = async (req, res, next) => {
   const { message, sender, conversation } = req.body;
   try {

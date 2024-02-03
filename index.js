@@ -99,7 +99,7 @@ io.on("connection", async (socket) => {
     try {
       let messageObj;
       if (attachment) {
-        const cloudImage = await cloudUploadStream("avatar", attachment);
+        const cloudImage = await cloudUploadStream("chat-app/messages", attachment);
         messageObj = {
           sender: senderId,
           message,
